@@ -1,0 +1,29 @@
+{
+  "name": "hito-4",
+  "version": "1.0.0",
+  "description": "Aplicación Backend en Node y Express",
+  "main": "index.js",
+  "exports": "./dist/index.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.mjs",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "build": "pkgroll"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.3",
+    "@types/pg": "^8.11.10",
+    "pkgroll": "^2.6.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
