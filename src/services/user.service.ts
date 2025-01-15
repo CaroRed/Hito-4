@@ -1,26 +1,39 @@
 import bcrypt from "bcryptjs";
-import { UserModel } from "../models/user.model";
-
+import { User } from "../models/user.model";
+import { IUser } from "../interfaces/user.interface";
 
 const getAllUsers = async () => {
-    return await UserModel.findAll();
+    const users = await User.findAll();
+    return users;
 };
 
-const getUserById = async (id: number) => {
-    const user = await UserModel.findOneById(id);
-    return user;
+const getUserById = async (uid: string) => {
+    const user = await User.findByPk(uid);
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return user.toJSON();
 };
 
 const getUserByEmail = async (email: string) => {
-    const user = await UserModel.findOneByEmail(email);
-    return user;
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const userData = user.toJSON();
+
+    return userData;
 };
 
 const createUserWithEmailAndPassword = async (
     email: string,
     password: string
 ) => {
-    const user = await UserModel.findOneByEmail(email);
+    const user = await User.findOne({ where: { email: email } });
 
     if (user) {
         throw new Error("Email already exists");
@@ -29,32 +42,55 @@ const createUserWithEmailAndPassword = async (
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(password, salt);
 
-    const newUser = await UserModel.create(email, passwordHashed);
+    const newUser = await User.create({ email, password: passwordHashed });
 
-    return newUser;
+    return newUser.toJSON();
+
 };
 
-const updateUserEmailAndPassword = async (id: number, email: string, password: string) => {
-    const user = await UserModel.findOneById(id);
+const updateUserEmailAndPassword = async (uid: string, email: string, password: string) => {
+    const user = await User.findByPk(uid);
 
     if (!user) {
         throw new Error("User not found");
     }
+
+    const userData = user.toJSON();
 
     const salt = await bcrypt.genSalt(10);
-    const passwordHashed = await bcrypt.hash(password, salt);
+    const passwordHashed = await bcrypt.hash(userData.password, salt);
 
-    const updateUser = await UserModel.update(id, email, passwordHashed);
-    return updateUser;
+    //const updateUser = await UserModel.update(uid, email, passwordHashed);
+
+    const res = await User.update(
+        {
+            email: email,
+            password: passwordHashed
+        },
+        {
+            where: {
+                uid: userData.uid,
+            },
+        },
+    );
+
+    return res;
 }
 
-const deleteUserById = async (id: number) => {
-    const user = await UserModel.findOneById(id);
+const deleteUserById = async (uid: string) => {
+    const user = await User.findByPk(uid);
 
     if (!user) {
         throw new Error("User not found");
     }
-    const deleteUser = await UserModel.deleteUser(id);
+    //const deleteUser = await UserModel.deleteUser(uid);
+
+    const deleteUser = await User.destroy({
+        where: {
+            uid: uid,
+        },
+    });
+
     return deleteUser;
 }
 

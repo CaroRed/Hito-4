@@ -18,7 +18,7 @@ const login = async (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-        const newUser = await userService.createUserWithEmailAndPassword(email, password);
+        const newUser = await authService.registerWithEmailAndPassword(email, password);
         res.json({ newUser });
     } catch (error) {
         console.log(error);

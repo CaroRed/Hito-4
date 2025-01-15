@@ -1,0 +1,263 @@
+openapi: 3.0.0
+info:
+  title: API de Usuarios y Libros
+  description: Documentación de la API para gestionar usuarios y libros.
+  version: 1.0.0
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: Iniciar sesión de usuario
+      operationId: login
+      tags:
+        - Autenticación
+      requestBody:
+        description: Credenciales de inicio de sesión
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Inicio de sesión exitoso.
+        '401':
+          description: Credenciales incorrectas.
+
+  /api/v1/auth/register:
+    post:
+      summary: Registrar un nuevo usuario
+      operationId: register
+      tags:
+        - Autenticación
+      requestBody:
+        description: Información para el registro de un nuevo usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente.
+        '400':
+          description: Información de registro incorrecta.
+
+  /users:
+    get:
+      summary: Obtener todos los usuarios
+      operationId: getUsers
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Lista de usuarios obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Crear un nuevo usuario
+      operationId: createUser
+      tags:
+        - Usuarios
+      requestBody:
+        description: Información del usuario a crear
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      summary: Obtener un único usuario por ID
+      operationId: getUser
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado.
+    put:
+      summary: Actualizar un usuario por ID
+      operationId: updateUser
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      requestBody:
+        description: Información del usuario a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente.
+        '404':
+          description: Usuario no encontrado.
+    delete:
+      summary: Eliminar un usuario por ID
+      operationId: deleteUser
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado exitosamente.
+        '404':
+          description: Usuario no encontrado.
+
+  /books:
+    get:
+      summary: Obtener todos los libros
+      operationId: getBooks
+      tags:
+        - Libros
+      responses:
+        '200':
+          description: Lista de libros obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Crear un nuevo libro
+      operationId: createBook
+      tags:
+        - Libros
+      requestBody:
+        description: Información del libro a crear
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Libro creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+
+  /books/{id}:
+    get:
+      summary: Obtener un libro por ID
+      operationId: getBookById
+      tags:
+        - Libros
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del libro
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Libro no encontrado.
+    put:
+      summary: Modificar un libro por ID
+      operationId: updateBook
+      tags:
+        - Libros
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del libro
+          schema:
+            type: string
+      requestBody:
+        description: Información del libro a modificar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Libro actualizado exitosamente.
+        '404':
+          description: Libro no encontrado.
+    delete:
+      summary: Eliminar un libro por ID
+      operationId: deleteBook
+      tags:
+        - Libros
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del libro
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Libro eliminado exitosamente.
+        '404':
+          description: Libro no encontrado.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        uid:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        isbn:
+          type: string
+        name:
+          type: string
+        pages:
+          type: integer

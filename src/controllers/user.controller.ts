@@ -17,7 +17,7 @@ const getUsers = async (req: Request, res: Response) => {
 const getUser = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const user = await userService.getUserById(parseInt(id));
+        const user = await userService.getUserById(id);
         if (!user) {
             res.status(404).json({ message: "User not found" });
         }
@@ -71,7 +71,7 @@ const updateUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const { id } = req.params;
-        const updateUser = await userService.updateUserEmailAndPassword(parseInt(id), email, password);
+        const updateUser = await userService.updateUserEmailAndPassword(id, email, password);
         res.json(updateUser);
     } catch (error) {
         console.log(error);
@@ -87,7 +87,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const deleteUser = await userService.deleteUserById(parseInt(id));
+        const deleteUser = await userService.deleteUserById(id);
         res.json(deleteUser);
     } catch (error) {
         console.log(error);

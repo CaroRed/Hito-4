@@ -9,7 +9,7 @@ const router = Router();
 // router.use(verifyToken)
 
 // leer los usuarios
-router.get("/", verifyToken, userController.getUsers);
+router.get("/", userController.getUsers);
 
 // leer un único usuario por id
 router.get("/:id", verifyToken, userController.getUser);
