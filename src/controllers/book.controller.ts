@@ -44,7 +44,7 @@ const createBook = async (req: Request, res: Response) => {
             name,
             pages
         );
-        res.json(newBook);
+        res.status(201).json(newBook);
     } catch (error) {
         console.log(error);
         if (error instanceof Error) {

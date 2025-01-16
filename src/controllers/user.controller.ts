@@ -56,7 +56,7 @@ const createUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const newUser = await userService.createUserWithEmailAndPassword(email, password);
-        res.json(newUser);
+        res.status(201).json(newUser);
     } catch (error) {
         console.log(error);
         if (error instanceof Error) {

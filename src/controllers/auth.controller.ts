@@ -6,7 +6,7 @@ const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const token = await authService.loginWithEmailAndPassword(email, password);
-        res.json(token);
+        res.status(200).json(token);
     } catch (error) {
         console.log(error);
         if (error instanceof Error) {
@@ -19,7 +19,7 @@ const register = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const newUser = await authService.registerWithEmailAndPassword(email, password);
-        res.json({ newUser });
+        res.status(201).json({ newUser });
     } catch (error) {
         console.log(error);
         if (error instanceof Error) {
