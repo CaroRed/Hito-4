@@ -8,7 +8,7 @@ La API está desarrollada utilizando **Node.js** con **Express.js**, y usa **Seq
 ## Tecnologías utilizadas
 - **Node.js** con **Express.js**
 - **Sequelize** como ORM
-- **MySQL** (u otra base de datos compatible con Sequelize)
+- **Postgres** (u otra base de datos compatible con Sequelize)
 - **JWT** para autenticación
 - **Docker** para facilitar la ejecución y despliegue
 - **Swagger (OpenAPI 3.0)** para la documentación
