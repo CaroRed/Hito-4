@@ -120,3 +120,6 @@ http://localhost:3000/api/v1/api-docs
 
 Esta documentación proporciona un resumen detallado sobre la API y su uso. 🚀
 
+Update 26-01-2025
+- Se valida datos de email y usuario no sean vacíos antes de generar el token.
+- Se valida que exista un secret antes de crear el token y que siempre lo lea de la variable del archivo .env.
