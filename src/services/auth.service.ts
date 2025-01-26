@@ -24,6 +24,10 @@ const loginWithEmailAndPassword = async (email: string, password: string) => {
     }
 
     // 3. generar el token
+    if (!userData.email || !userData.uid) {
+        throw new Error("User data is incomplete");
+    }
+
     const token = generateAccessToken(userData.email, userData.uid);
 
     return { token: token };
@@ -38,7 +42,9 @@ const registerWithEmailAndPassword = async (
         password
     );
 
-    //console.log(newUser.uid);
+    if (!newUser.email || !newUser.uid) {
+        throw new Error("User data is incomplete");
+    }
 
     const token = generateAccessToken(newUser.email, newUser.uid);
 

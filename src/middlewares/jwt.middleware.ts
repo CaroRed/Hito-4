@@ -8,6 +8,12 @@ declare module "express-serve-static-core" {
     }
 }
 
+const secret = process.env.AUTH_SECRET;
+
+if (!secret) {
+    throw new Error("secret must be provided");
+}
+
 export const verifyToken = (
     req: Request,
     res: Response,
@@ -20,7 +26,7 @@ export const verifyToken = (
     }
     const token = authHeader.split(" ")[1];
     try {
-        const payload = jwt.verify(token, "secret") as jwt.JwtPayload;
+        const payload = jwt.verify(token, secret) as jwt.JwtPayload;
         req.email = payload.email;
         next();
     } catch (error) {

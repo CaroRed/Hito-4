@@ -17,7 +17,7 @@ import { BookAttributes } from "../interfaces/book.interface";
 export class Book extends Model<BookAttributes> {
     @PrimaryKey
     @AutoIncrement
-    @Column(DataType.INTEGER.UNSIGNED)
+    @Column(DataType.INTEGER)
     declare id: number;
 
     @AllowNull(false)

@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const secret = process.env.JWT_SECRET || "secret";
+const secret = process.env.AUTH_SECRET;
+
+if (!secret) {
+    throw new Error("secret must be provided");
+}
 
 export const generateAccessToken = (
     email: string,
