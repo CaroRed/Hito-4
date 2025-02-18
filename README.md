@@ -1,5 +1,5 @@
-# Hito-4
-## API de Usuarios y Libros
+# Hito-6
+## Patrones de Integración Empresarial
 
 Esta API permite gestionar usuarios y libros. Proporciona endpoints para la autenticación de usuarios, así como la creación, actualización, eliminación y obtención de información sobre usuarios y libros.
 
