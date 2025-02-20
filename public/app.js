@@ -4,7 +4,7 @@ socket.on("connect", () => {
     console.log("✅ Connected to server");
 });
 
-// Unirse a una sala (puedes hacer esto al cargar la página o después de alguna acción)
+// Unirse a una sala
 socket.emit("joinRoom", "room1");
 
 // Enviar un mensaje a la sala

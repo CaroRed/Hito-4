@@ -1,16 +1,28 @@
 import { Server } from "socket.io";
 
-// Función que recibe la instancia de `io` y maneja la lógica de los sockets
+interface User {
+    id: string,
+    username: string,
+    joinedAt: Date;
+}
+const connectedUsers: { [key: string]: User } = {};
+
 const configureSocket = (io: Server) => {
     const chat = io.of("/chat");  // Crear el namespace "/chat"
 
     chat.on("connection", (socket) => {
-        console.log("New connection", socket.id);
 
-        // Unirse a una sala
-        socket.on("joinRoom", (room: string) => {
-            socket.join(room);
-            console.log(`User ${socket.id} joined room ${room}`);
+        // conectar a usuario
+        socket.on("join", (username: string) => {
+            connectedUsers[socket.id] = {
+                id: socket.id,
+                username: username,
+                joinedAt: new Date()
+            }
+            console.log(`User ${connectedUsers[socket.id].username} joined `);
+
+            //broadcast a todos los usuarios
+            chat.emit("users", Object.values(connectedUsers));
         });
 
         // Enviar un mensaje a una sala
@@ -21,7 +33,11 @@ const configureSocket = (io: Server) => {
 
         // Desconexión del socket
         socket.on("disconnect", () => {
-            console.log(`User disconnected: ${socket.id}`);
+            delete connectedUsers[socket.id];
+            console.log(`User ${socket.id} disconnected`);
+
+            // Broadcast a todos los usuarios conectados
+            chat.emit("users", Object.values(connectedUsers));
         });
     });
 };
