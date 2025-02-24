@@ -35,7 +35,7 @@ Este hito consiste en la implementación de un sistema de mensajería en tiempo 
 2. Instalar dependencias con `npm install`.
 3. Definir la variable de entorno `AUTH_SECRET`.
 4. Iniciar el servidor con `npm run dev`.
-5. Acceder a la interfaz en el navegador o conectarse mediante **Socket.io**.
+5. Acceder a la interfaz en el navegador
 6. Este proyecto utiliza Docker para la base de datos.
 7. Crear en thunder client un usuario, para luego loguearse y obtener el token que pide el chat.
 
