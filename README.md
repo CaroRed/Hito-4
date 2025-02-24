@@ -1,22 +1,43 @@
-# Hito-6
-## Patrones de Integración Empresarial
+# Hito 6 - Patrones de Integración Empresarial
 
-Esta API permite gestionar usuarios y libros. Proporciona endpoints para la autenticación de usuarios, así como la creación, actualización, eliminación y obtención de información sobre usuarios y libros.
+## Descripción
+Este hito consiste en la implementación de un sistema de mensajería en tiempo real utilizando **Socket.io** y **WebSocket**, asegurando la autenticación mediante **JWT**.
 
-La API está desarrollada utilizando **Node.js** con **Express.js**, y usa **Sequelize** como ORM para interactuar con la base de datos. Además, se puede ejecutar fácilmente utilizando **Docker**.
+## Requerimientos Implementados
 
-## Tecnologías utilizadas
-- **Node.js** con **Express.js**
-- **Sequelize** como ORM
-- **Postgres** (u otra base de datos compatible con Sequelize)
-- **JWT** para autenticación
-- **Docker** para facilitar la ejecución y despliegue
-- **Swagger (OpenAPI 3.0)** para la documentación
+1. **Instalación de dependencias**
+   - Se instalaron las librerías necesarias para **Socket.io** y **WebSocket**.
 
-## Instalación y ejecución
+2. **Configuración de Middleware**
+   - Se implementó **morgan** para el registro de solicitudes.
+   - Se omitió **cookie-parser** ya que se utiliza autenticación con **Bearer Token**.
+   - Se configuró **express.static** para servir un archivo HTML opcional.
 
-### Requisitos previos
-- Tener instalado **Docker** y **Docker Compose**
+3. **Estructura y Login Personalizado**
+   - Se implementó un mecanismo de autenticación con **JWT**.
+   - Se validan los tokens al establecer la conexión con **Socket.io**.
+
+4. **Configuración de Socket.io**
+   - Se creó un namespace para la gestión de chat.
+   - Se implementó el manejo de eventos para la comunicación en tiempo real.
+
+5. **Manejo de desconexiones y errores**
+   - Se agregó la detección de desconexiones de usuarios.
+   - Se implementó un sistema centralizado para el manejo de errores.
+
+6. **Interfaz HTML Opcional**
+   - Se creó una página web para interactuar con el sistema de mensajería.
+   - Se configuró una ruta en el servidor para servir el archivo HTML.
+
+## Instalación y Ejecución
+
+1. Clonar el repositorio.
+2. Instalar dependencias con `npm install`.
+3. Definir la variable de entorno `AUTH_SECRET`.
+4. Iniciar el servidor con `npm run dev`.
+5. Acceder a la interfaz en el navegador o conectarse mediante **Socket.io**.
+6. Este proyecto utiliza Docker para la base de datos.
+7. Crear en thunder client un usuario, para luego loguearse y obtener el token que pide el chat.
 
 ## Endpoints principales
 La url de API es:
@@ -44,82 +65,16 @@ Respuesta exitosa:
 **POST** `/auth/register`
 ```json
 {
-  "email": "nuevo@usuario.com",
-  "password": "securepassword"
+  "email": "demo@test.com",
+  "password": "123123"
 }
 ```
 
-### Usuarios
-#### Obtener todos los usuarios
-**GET** `/users/` (Requiere Bearer Token)
-
-#### Crear usuario
-**POST** `/users/`
-```json
-{
-  "email": "usuario@test.com",
-  "password": "123456"
-}
+## Visualizar página html
+La url de frontend es:
+```
+http://localhost:3000/
 ```
 
-#### Obtener un usuario por ID
-**GET** `/users/{id}` (Requiere Bearer Token)
-
-#### Actualizar un usuario
-**PUT** `/users/{id}` (Requiere Bearer Token)
-
-#### Eliminar un usuario
-**DELETE** `/users/{id}` (Requiere Bearer Token)
-
-### Libros
-#### Obtener todos los libros
-**GET** `/books/` (Requiere Bearer Token)
-
-#### Crear libro
-**POST** `/books/`
-```json
-{
-  "isbn": "978-3-16-148410-0",
-  "name": "El Quijote",
-  "pages": 500
-}
-```
-
-#### Obtener un libro por ID
-**GET** `/books/{id}` (Requiere Bearer Token)
-
-#### Actualizar un libro
-**PUT** `/books/{id}` (Requiere Bearer Token)
-
-#### Eliminar un libro
-**DELETE** `/books/{id}` (Requiere Bearer Token)
-
-## Uso de Sequelize
-Sequelize se utiliza como ORM para la interacción con la base de datos. Las migraciones y modelos están configurados en la carpeta `/models/`.
-
-## Uso de Docker
-El proyecto incluye un `docker-compose.yml` para facilitar su ejecución en contenedores.
 
 
-
-## Autenticación
-Todas las rutas protegidas requieren un **Bearer Token** en la cabecera de la solicitud:
-```json
-{
-  "Authorization": "Bearer <tu_token_aquí>"
-}
-```
-
-## Documentación con Swagger
-La API está documentada con **Swagger**. Puedes acceder a la documentación en:
-```
-http://localhost:3000/api/v1/api-docs
-```
-
----
-
-Esta documentación proporciona un resumen detallado sobre la API y su uso. 🚀
-
-Update 26-01-2025
-- Se valida datos de email y usuario no sean vacíos antes de generar el token.
-- Se valida que exista un secret antes de crear el token y que siempre lo lea de la variable del archivo .env.

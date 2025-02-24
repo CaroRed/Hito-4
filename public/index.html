@@ -4,13 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Chat</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>Chat App</title>
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="app.js"></script>
 </head>
 
 <body>
-    <h1>Chat 3000.</h1>
-    <script src="app.js"></script>
+    <h1>Chat App</h1>
+
+    <!-- Formulario para ingresar el token -->
+    <form id="loginForm">
+        <input type="text" id="tokenInput" placeholder="Enter your token" required>
+        <button type="submit">Connect</button>
+    </form>
+
+    <!-- Selección de sala -->
+    <div id="chatContainer" style="display: none;">
+        <h2>Welcome, <span id="username"></span></h2>
+
+        <label for="roomSelect">Choose a room:</label>
+        <select id="roomSelect">
+            <option value="room1">Room 1</option>
+            <option value="room2">Room 2</option>
+        </select>
+        <button id="joinRoom">Join Room</button>
+
+        <!-- Área de mensajes -->
+        <div id="messages"
+            style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; height: 200px; overflow-y: auto;"></div>
+
+        <!-- Entrada de mensajes -->
+        <input type="text" id="messageInput" placeholder="Type a message" disabled>
+        <button id="sendMessage" disabled>Send</button>
+    </div>
+
 </body>
 
 </html>

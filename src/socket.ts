@@ -1,44 +1,94 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface User {
-    id: string,
-    username: string,
+    id: string;
+    username: string;
     joinedAt: Date;
 }
+
 const connectedUsers: { [key: string]: User } = {};
 
+const handleError = (socket: Socket, event: string, error: unknown) => {
+    const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+
+    console.log(`Error in event ${event}: ${errorMessage}`);
+    socket.emit("error", {
+        event,
+        message: errorMessage,
+    });
+};
+
+declare module "socket.io" {
+    interface Socket {
+        user?: JwtPayload;
+    }
+}
+
+const secret = process.env.AUTH_SECRET;
+if (!secret) {
+    throw new Error("secret must be provided");
+}
+
 const configureSocket = (io: Server) => {
-    const chat = io.of("/chat");  // Crear el namespace "/chat"
+    const chat = io.of("/chat");
+
+    // Middleware de autenticación
+    chat.use((socket: Socket, next) => {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error("Authentication error"));
+        }
+
+        try {
+            const decoded = jwt.verify(token, secret) as JwtPayload;
+            socket.user = decoded;
+            next();
+        } catch (error) {
+            handleError(socket, "authentication", error);
+            next(new Error("Authentication error"));
+        }
+    });
 
     chat.on("connection", (socket) => {
+        try {
+            if (!socket.user || !socket.user.email) {
+                throw new Error("User not authenticated");
+            }
 
-        // conectar a usuario
-        socket.on("join", (username: string) => {
+            // Guardar usuario en la lista de conectados
             connectedUsers[socket.id] = {
                 id: socket.id,
-                username: username,
-                joinedAt: new Date()
-            }
-            console.log(`User ${connectedUsers[socket.id].username} joined `);
+                username: socket.user.email,
+                joinedAt: new Date(),
+            };
 
-            //broadcast a todos los usuarios
+            console.log(`User ${socket.user.email} connected`);
+
+            // Enviar lista de usuarios a todos los clientes
             chat.emit("users", Object.values(connectedUsers));
-        });
 
-        // Enviar un mensaje a una sala
-        socket.on("sendMessage", (data: { room: string, message: string }) => {
-            console.log(`Message to room ${data.room}: ${data.message}`);
-            chat.to(data.room).emit("receiveMessage", data.message);
-        });
+            socket.on("joinRoom", (room) => {
+                socket.join(room);
+                console.log(`${socket.user?.email} joined room: ${room}`);
+            });
 
-        // Desconexión del socket
-        socket.on("disconnect", () => {
-            delete connectedUsers[socket.id];
-            console.log(`User ${socket.id} disconnected`);
+            socket.on("sendMessage", (data: { room: string; message: string }) => {
+                chat.to(data.room).emit("receiveMessage", {
+                    username: socket.user?.email,
+                    message: data.message,
+                });
+            });
 
-            // Broadcast a todos los usuarios conectados
-            chat.emit("users", Object.values(connectedUsers));
-        });
+            socket.on("disconnect", () => {
+                console.log(`User ${socket.user?.email} disconnected`);
+                delete connectedUsers[socket.id];
+                chat.emit("users", Object.values(connectedUsers));
+            });
+        } catch (error) {
+            handleError(socket, "connection", error);
+        }
     });
 };
 
