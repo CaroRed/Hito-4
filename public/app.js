@@ -38,12 +38,21 @@ document.getElementById("loginForm").addEventListener("submit", (event) => {
     // Unirse a una sala
     document.getElementById("joinRoom").addEventListener("click", () => {
         const room = document.getElementById("roomSelect").value;
+
+        if (socket.currentRoom) {
+            socket.emit("leaveRoom", socket.currentRoom);
+            console.log(`⬅ Left room: ${socket.currentRoom}`);
+        }
+
         socket.emit("joinRoom", room);
-        console.log(`Joined room: ${room}`);
+        console.log(`➡ Joined room: ${room}`);
+
+        socket.currentRoom = room;
 
         document.getElementById("messageInput").disabled = false;
         document.getElementById("sendMessage").disabled = false;
     });
+
 
     // Enviar mensaje
     document.getElementById("sendMessage").addEventListener("click", () => {

@@ -69,6 +69,14 @@ const configureSocket = (io: Server) => {
             // Enviar lista de usuarios a todos los clientes
             chat.emit("users", Object.values(connectedUsers));
 
+            // Dejar la sala
+            socket.on("leaveRoom", (room) => {
+                socket.leave(room);
+                console.log(`User ${socket.user?.email} left room: ${room}`);
+                socket.emit("systemMessage", `You have left ${room}`);
+            });
+
+
             socket.on("joinRoom", (room) => {
                 socket.join(room);
                 console.log(`${socket.user?.email} joined room: ${room}`);
@@ -81,6 +89,7 @@ const configureSocket = (io: Server) => {
                 });
             });
 
+            //desconectarse
             socket.on("disconnect", () => {
                 console.log(`User ${socket.user?.email} disconnected`);
                 delete connectedUsers[socket.id];
